@@ -7,7 +7,7 @@ from model import segnet
 
 def argparser():
     # command line argments
-    parser = argparse.ArgumentParser(description="SegNet LIP dataset")
+    parser = argparse.ArgumentParser(fromfile_prefix_chars='@', description="SegNet LIP dataset")
     parser.add_argument("--save_dir", help="output directory")
     parser.add_argument("--train_list", help="train list path")
     parser.add_argument("--trainimg_dir", help="train image dir path")
