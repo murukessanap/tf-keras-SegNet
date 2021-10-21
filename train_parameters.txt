@@ -1,15 +1,15 @@
---save_dir
---train_list
---trainimg_dir
---trainmsk_dir
---val_list
---valimg_dir
---valmsk_dir
---batch_size
---n_epochs
---epoch_steps
---val_steps
---n_labels
+--save_dir save/
+--train_list train_list_file.txt
+--trainimg_dir data/train/images/
+--trainmsk_dir data/train/masks/
+--val_list val_list_file.txt
+--valimg_dir data/val/images/
+--valmsk_dir data/val/masks/
+--batch_size 4
+--n_epochs 100
+--epoch_steps 2
+--val_steps 1
+--n_labels 2
 --input_shape
 --kernel
 --pool_size
