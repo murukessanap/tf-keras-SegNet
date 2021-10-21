@@ -1,7 +1,7 @@
 from keras.layers import Input
 from keras.layers.convolutional import Convolution2D
 from keras.layers.core import Activation, Reshape
-from keras.layers.normalization import BatchNormalization
+from keras.layers import BatchNormalization
 from keras.models import Model
 from layers import MaxPoolingWithArgmax2D, MaxUnpooling2D
 

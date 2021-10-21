@@ -1,18 +1,12 @@
---save_dir save/
---train_list train_list_file.txt
---trainimg_dir data/train/images/
---trainmsk_dir data/train/masks/
---val_list val_list_file.txt
---valimg_dir data/val/images/
---valmsk_dir data/val/masks/
---batch_size 4
---n_epochs 100
---epoch_steps 2
---val_steps 1
---n_labels 2
---input_shape
---kernel
---pool_size
---output_mode
---loss
---optimizer
+--save_dir=save/
+--train_list=train_list.txt
+--trainimg_dir=data/train/images/
+--trainmsk_dir=data/train/masks/
+--val_list=val_list.txt
+--valimg_dir=data/val/images/
+--valmsk_dir=data/val/masks/
+--batch_size=4
+--n_epochs=20
+--epoch_steps=2
+--val_steps=1
+--n_labels=2

@@ -7,7 +7,7 @@ from model import segnet
 
 def argparser():
     # command line argments
-    parser = argparse.ArgumentParser(fromfile_prefix_chars='@', description="SegNet LIP dataset")
+    parser = argparse.ArgumentParser(fromfile_prefix_chars='@')#, description="SegNet LIP dataset")
     parser.add_argument("--save_dir", help="output directory")
     parser.add_argument("--train_list", help="train list path")
     parser.add_argument("--trainimg_dir", help="train image dir path")
@@ -45,8 +45,8 @@ def argparser():
 
 def main(args):
     # set the necessary list
-    train_list = pd.read_csv(args.train_list, header=None)
-    val_list = pd.read_csv(args.val_list, header=None)
+    train_list = pd.read_csv(args.train_list, header=None, dtype=str)
+    val_list = pd.read_csv(args.val_list, header=None, dtype=str)
 
     # set the necessary directories
     trainimg_dir = args.trainimg_dir
