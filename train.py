@@ -88,7 +88,7 @@ def main(args):
     print(model.summary())
 
     model.compile(loss=args.loss, optimizer=args.optimizer, metrics=["accuracy"])
-    '''model.fit_generator(
+    model.fit_generator(
         train_gen,
         steps_per_epoch=args.epoch_steps,
         epochs=args.n_epochs,
@@ -97,10 +97,10 @@ def main(args):
     )
 
     model.save_weights(args.save_dir + str(args.n_epochs) + ".hdf5")
-    print("sava weight done..")'''
-    print(args.save_dir + str(args.n_epochs) + ".hdf5")
-    file_path = args.save_dir + str(args.n_epochs) + ".hdf5"
-    model.load_weights(file_path)
+    print("sava weight done..")
+    #print(args.save_dir + str(args.n_epochs) + ".hdf5")
+    #file_path = args.save_dir + str(args.n_epochs) + ".hdf5"
+    #model.load_weights(file_path)
 
     save_path = "results/"
     count = 0
