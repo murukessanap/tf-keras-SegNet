@@ -1,8 +1,10 @@
 import argparse
 
 import pandas as pd
-from generator import data_gen_small
+from generator import *
 from model import segnet
+import cv2
+import numpy as np
 
 
 def argparser():
@@ -70,6 +72,15 @@ def main(args):
         [args.input_shape[0], args.input_shape[1]],
         args.n_labels,
     )
+    test_gen = data_gen_test(
+        valimg_dir,
+        valmsk_dir,
+        val_list,
+        1,
+        [args.input_shape[0], args.input_shape[1]],
+        args.n_labels,
+    )
+
 
     model = segnet(
         args.input_shape, args.n_labels, args.kernel, args.pool_size, args.output_mode
@@ -77,7 +88,7 @@ def main(args):
     print(model.summary())
 
     model.compile(loss=args.loss, optimizer=args.optimizer, metrics=["accuracy"])
-    model.fit_generator(
+    '''model.fit_generator(
         train_gen,
         steps_per_epoch=args.epoch_steps,
         epochs=args.n_epochs,
@@ -86,8 +97,35 @@ def main(args):
     )
 
     model.save_weights(args.save_dir + str(args.n_epochs) + ".hdf5")
-    print("sava weight done..")
+    print("sava weight done..")'''
+    print(args.save_dir + str(args.n_epochs) + ".hdf5")
+    file_path = args.save_dir + str(args.n_epochs) + ".hdf5"
+    model.load_weights(file_path)
 
+    save_path = "results/"
+    count = 0
+    for i,(image,mask) in enumerate(test_gen):
+      pred_mask = model.predict(image)
+      image = rgb2gray(image).squeeze()
+      mask = mask.argmax(axis=2).reshape(args.input_shape[0],args.input_shape[1])
+      pred_mask = pred_mask.argmax(axis=2).reshape(args.input_shape[0],args.input_shape[1])
+      print(image.shape)
+      print(mask.shape)
+      print(pred_mask.shape)
+      print(np.max(image),np.min(image))
+      print(np.max(mask),np.min(mask))
+      print(np.max(pred_mask),np.min(pred_mask))
+
+      sep_line = np.ones((args.input_shape[0], 10)) * 255
+      all_images = [image * 255, sep_line, mask * 255, sep_line, pred_mask * 255]
+      cv2.imwrite(f"{save_path}/{i}.png", np.concatenate(all_images, axis=1))
+
+      count += 1
+      if count == len(val_list):
+        break
+
+def rgb2gray(rgb):
+    return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
 
 if __name__ == "__main__":
     args = argparser()
