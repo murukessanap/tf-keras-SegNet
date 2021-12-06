@@ -6,6 +6,7 @@ from model import segnet
 import cv2
 import numpy as np
 from keras.callbacks import CSVLogger
+import keras.backend as K
 
 
 def argparser():
@@ -107,11 +108,15 @@ def main(args):
 
     save_path = "results/"
     count = 0
+    Dice = []
+    IOU = []
     for i,(image,mask) in enumerate(test_gen):
       pred_mask = model.predict(image)
       image = rgb2gray(image).squeeze()
       mask = mask.argmax(axis=2).reshape(args.input_shape[0],args.input_shape[1])
       pred_mask = pred_mask.argmax(axis=2).reshape(args.input_shape[0],args.input_shape[1])
+      Dice.append(DiceScore(mask,pred_mask))
+      IOU.append(IOUScore(mask,pred_mask))
       print(image.shape)
       print(mask.shape)
       print(pred_mask.shape)
@@ -126,9 +131,34 @@ def main(args):
       count += 1
       if count == len(val_list):
         break
+    print("Average Test DICE score: ",sum(Dice)/len(Dice))
+    print("Average Test IOU score: ",sum(IOU)/len(IOU))
 
 def rgb2gray(rgb):
     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
+
+def DiceScore(targets, inputs, smooth=1e-6):
+    
+    #flatten label and prediction tensors
+    inputs = K.flatten(inputs)
+    targets = K.flatten(targets)
+    
+    intersection = K.sum(K.dot(targets, inputs))
+    dice = (2*intersection + smooth) / (K.sum(targets) + K.sum(inputs) + smooth)
+    return dice
+
+def IoUScore(targets, inputs, smooth=1e-6):
+    
+    #flatten label and prediction tensors
+    inputs = K.flatten(inputs)
+    targets = K.flatten(targets)
+    
+    intersection = K.sum(K.dot(targets, inputs))
+    total = K.sum(targets) + K.sum(inputs)
+    union = total - intersection
+    
+    IoU = (intersection + smooth) / (union + smooth)
+    return IoU
 
 if __name__ == "__main__":
     args = argparser()
