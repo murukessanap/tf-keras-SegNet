@@ -141,8 +141,8 @@ def rgb2gray(rgb):
 def DiceScore(targets, inputs, smooth=1e-6):
     
     #flatten label and prediction tensors
-    inputs = K.flatten(inputs)
-    targets = K.flatten(targets)
+    inputs = tf.cast(K.flatten(inputs), tf.float32)
+    targets = tf.cast(K.flatten(targets), tf.float32)
     
     intersection = K.sum(K.dot(tf.expand_dims(targets,0), tf.expand_dims(inputs,-1)))
     dice = (2*intersection + smooth) / (K.sum(targets) + K.sum(inputs) + smooth)
@@ -151,8 +151,8 @@ def DiceScore(targets, inputs, smooth=1e-6):
 def IoUScore(targets, inputs, smooth=1e-6):
     
     #flatten label and prediction tensors
-    inputs = K.flatten(inputs)
-    targets = K.flatten(targets)
+    inputs = tf.cast(K.flatten(inputs), tf.float32)
+    targets = tf.cast(K.flatten(targets), tf.float32)
     
     intersection = K.sum(K.dot(tf.expand_dims(targets,0), tf.expand_dims(inputs,-1)))
     total = K.sum(targets) + K.sum(inputs)
