@@ -5,6 +5,7 @@ from generator import *
 from model import segnet
 import cv2
 import numpy as np
+from tf.keras.callbacks import CSVLogger
 
 
 def argparser():
@@ -88,12 +89,14 @@ def main(args):
     print(model.summary())
 
     model.compile(loss=args.loss, optimizer=args.optimizer, metrics=["accuracy"])
+    csv_logger = CSVLogger('training.log')
     model.fit_generator(
         train_gen,
         steps_per_epoch=args.epoch_steps,
         epochs=args.n_epochs,
         validation_data=val_gen,
         validation_steps=args.val_steps,
+        callbacks=[csv_logger],
     )
 
     model.save_weights(args.save_dir + str(args.n_epochs) + ".hdf5")
