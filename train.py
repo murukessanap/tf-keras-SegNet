@@ -143,7 +143,7 @@ def DiceScore(targets, inputs, smooth=1e-6):
     inputs = K.flatten(inputs)
     targets = K.flatten(targets)
     
-    intersection = K.sum(K.dot(targets, inputs))
+    intersection = K.sum(K.dot(np.expand_dims(targets,0), np.expand_dims(inputs,-1)))
     dice = (2*intersection + smooth) / (K.sum(targets) + K.sum(inputs) + smooth)
     return dice
 
@@ -153,7 +153,7 @@ def IoUScore(targets, inputs, smooth=1e-6):
     inputs = K.flatten(inputs)
     targets = K.flatten(targets)
     
-    intersection = K.sum(K.dot(targets, inputs))
+    intersection = K.sum(np.expand_dims(targets,0), np.expand_dims(inputs,-1))
     total = K.sum(targets) + K.sum(inputs)
     union = total - intersection
     
