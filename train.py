@@ -5,7 +5,7 @@ from generator import *
 from model import segnet
 import cv2
 import numpy as np
-from tf.keras.callbacks import CSVLogger
+from keras.callbacks import CSVLogger
 
 
 def argparser():
