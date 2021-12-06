@@ -146,7 +146,7 @@ def DiceScore(targets, inputs, smooth=1e-6):
     
     intersection = K.sum(K.dot(tf.expand_dims(targets,0), tf.expand_dims(inputs,-1)))
     dice = (2*intersection + smooth) / (K.sum(targets) + K.sum(inputs) + smooth)
-    return dice
+    return float(dice)
 
 def IoUScore(targets, inputs, smooth=1e-6):
     
@@ -159,7 +159,7 @@ def IoUScore(targets, inputs, smooth=1e-6):
     union = total - intersection
     
     IoU = (intersection + smooth) / (union + smooth)
-    return IoU
+    return float(IoU)
 
 if __name__ == "__main__":
     args = argparser()
