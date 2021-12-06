@@ -117,7 +117,7 @@ def main(args):
       mask = mask.argmax(axis=2).reshape(args.input_shape[0],args.input_shape[1])
       pred_mask = pred_mask.argmax(axis=2).reshape(args.input_shape[0],args.input_shape[1])
       Dice.append(DiceScore(mask,pred_mask))
-      IOU.append(IOUScore(mask,pred_mask))
+      IOU.append(IoUScore(mask,pred_mask))
       print(image.shape)
       print(mask.shape)
       print(pred_mask.shape)
