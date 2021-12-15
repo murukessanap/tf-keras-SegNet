@@ -46,14 +46,15 @@ def data_gen_test(img_dir, mask_dir, lists, batch_size, dims, n_labels):
         labels = []
         for i in ix:
             # images
-            img_path = img_dir + str(lists.iloc[i, 0]) + ".png"
+            img_path = img_dir + str(lists.iloc[i, 0]) + ".jpg"
             #print(img_path)
             original_img = cv2.imread(img_path)[:, :, ::-1]
             resized_img = cv2.resize(original_img, (dims[0],dims[1]))
             array_img = img_to_array(resized_img) / 255
             imgs.append(array_img)
             # masks
-            original_mask = cv2.imread(mask_dir + str(lists.iloc[i, 0]) + ".ome.tiff")
+            mask_path = mask_dir + str(lists.iloc[i, 0]) + "_Al.ome.tiff"
+            original_mask = cv2.imread(mask_path)
             resized_mask = cv2.resize(original_mask, (dims[0], dims[1]))
             array_mask = category_label(resized_mask[:, :, 0], dims, n_labels)
             labels.append(array_mask)
