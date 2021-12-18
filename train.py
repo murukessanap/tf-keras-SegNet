@@ -8,6 +8,7 @@ import numpy as np
 import tensorflow as tf
 from keras.callbacks import CSVLogger
 import keras.backend as K
+import keras
 
 
 def argparser():
@@ -91,7 +92,7 @@ def main(args):
     )
     print(model.summary())
 
-    optimizer = tf.keras.optimizers.Adadelta(learning_rate=args.lr)
+    optimizer = keras.optimizers.Adadelta(learning_rate=args.lr)
     model.compile(loss=args.loss, optimizer=optimizer, metrics=[DiceScore,IoUScore])
     csv_logger = CSVLogger('training.log')
     model.fit_generator(
