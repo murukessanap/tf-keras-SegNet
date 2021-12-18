@@ -13,6 +13,7 @@ import keras.backend as K
 def argparser():
     # command line argments
     parser = argparse.ArgumentParser(fromfile_prefix_chars='@')#, description="SegNet LIP dataset")
+    parser.add_argument("--lr", default="0.001", help="learning rate")
     parser.add_argument("--save_dir", help="output directory")
     parser.add_argument("--train_list", help="train list path")
     parser.add_argument("--trainimg_dir", help="train image dir path")
@@ -90,7 +91,8 @@ def main(args):
     )
     print(model.summary())
 
-    model.compile(loss=args.loss, optimizer=args.optimizer, metrics=["accuracy"])
+    optimizer = tf.keras.optimizers.Adadelta(learning_rate=args.lr)
+    model.compile(loss=args.loss, optimizer=optimizer, metrics=["accuracy"])
     csv_logger = CSVLogger('training.log')
     model.fit_generator(
         train_gen,
