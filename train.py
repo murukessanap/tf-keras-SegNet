@@ -92,7 +92,7 @@ def main(args):
     print(model.summary())
 
     optimizer = tf.keras.optimizers.Adadelta(learning_rate=args.lr)
-    model.compile(loss=args.loss, optimizer=optimizer, metrics=["accuracy"])
+    model.compile(loss=args.loss, optimizer=optimizer, metrics=[DiceScore(),IoUScore()])
     csv_logger = CSVLogger('training.log')
     model.fit_generator(
         train_gen,
@@ -129,7 +129,7 @@ def main(args):
 
       sep_line = np.ones((args.input_shape[0], 10)) * 255
       all_images = [image * 255, sep_line, mask * 255, sep_line, pred_mask * 255]
-      cv2.imwrite(f"{save_path}/{i}.png", np.concatenate(all_images, axis=1))
+      cv2.imwrite(f"{save_path}/{val_list[i]}.png", np.concatenate(all_images, axis=1))
 
       count += 1
       if count == len(val_list):
