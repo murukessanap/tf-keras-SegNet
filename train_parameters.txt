@@ -5,8 +5,9 @@
 --val_list=val_list.txt
 --valimg_dir=data/val/images/
 --valmsk_dir=data/val/masks/
---batch_size=4
---n_epochs=20
---epoch_steps=2
---val_steps=1
+--batch_size=8
+--n_epochs=100
+--epoch_steps=9
+--val_steps=2
 --n_labels=2
+--lr 0.01
