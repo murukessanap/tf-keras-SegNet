@@ -93,7 +93,7 @@ def main(args):
     print(model.summary())
 
     optimizer = keras.optimizers.Adam(lr=float(args.lr))
-    model.compile(loss=args.loss, optimizer=optimizer, metrics=[DiceScore,IoUScore])
+    model.compile(loss=args.loss, optimizer=optimizer, metrics=[dice_coef])
     csv_logger = CSVLogger('training.log')
     model.fit_generator(
         train_gen,
@@ -151,6 +151,12 @@ def DiceScore(targets, inputs):
     intersection = K.sum(K.dot(tf.expand_dims(targets,0), tf.expand_dims(inputs,-1)))
     dice = (2*intersection + smooth) / (K.sum(targets) + K.sum(inputs) + smooth)
     return K.get_value(dice)
+
+def dice_coef(y_true, y_pred):
+    y_true_f = tf.keras.layers.Flatten()(y_true)
+    y_pred_f = tf.keras.layers.Flatten()(y_pred)
+    intersection = tf.reduce_sum(y_true_f * y_pred_f)
+    return (2. * intersection + smooth) / (tf.reduce_sum(y_true_f) + tf.reduce_sum(y_pred_f) + smooth)
 
 def IoUScore(targets, inputs):
     
