@@ -32,7 +32,7 @@ def data_gen_small(img_dir, mask_dir, lists, batch_size, dims, n_labels):
             #original_mask = cv2.imread(mask_dir + str(lists.iloc[i, 0]) + ".ome.tiff")
             original_mask = cv2.imread(mask_path,0)
             resized_mask = cv2.resize(original_mask, (dims[0], dims[1]))
-            array_mask = category_label(resized_mask[:, :, 0], dims, n_labels)
+            array_mask = category_label(resized_mask, dims, n_labels)
             labels.append(array_mask)
         imgs = np.array(imgs)
         labels = np.array(labels)
@@ -58,7 +58,7 @@ def data_gen_test(img_dir, mask_dir, lists, batch_size, dims, n_labels):
             mask_path = mask_dir + str(lists.iloc[i, 0]) + "_Al.ome.tiff"
             original_mask = cv2.imread(mask_path,0)
             resized_mask = cv2.resize(original_mask, (dims[0], dims[1]))
-            array_mask = category_label(resized_mask[:, :, 0], dims, n_labels)
+            array_mask = category_label(resized_mask, dims, n_labels)
             labels.append(array_mask)
         imgs = np.array(imgs)
         labels = np.array(labels)
