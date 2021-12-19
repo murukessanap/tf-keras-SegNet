@@ -8,6 +8,7 @@ import numpy as np
 import tensorflow as tf
 from keras.callbacks import CSVLogger
 import keras.backend as K
+from keras.metrics import Recall, Precision, MeanIoU
 import keras
 
 
@@ -93,7 +94,7 @@ def main(args):
     print(model.summary())
 
     optimizer = keras.optimizers.Adam(lr=float(args.lr))
-    model.compile(loss=args.loss, optimizer=optimizer, metrics=[dice_coef])
+    model.compile(loss=args.loss, optimizer=optimizer, metrics=[Recall(), Precision(), MeanIoU(num_classes=2)])
     csv_logger = CSVLogger('training.log')
     model.fit_generator(
         train_gen,
