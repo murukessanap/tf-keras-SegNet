@@ -96,14 +96,14 @@ def main(args):
     optimizer = keras.optimizers.Adam(lr=float(args.lr))
     model.compile(loss=args.loss, optimizer=optimizer, metrics=["accuracy"])
     csv_logger = CSVLogger('training.log')
-    model.fit_generator(
-        train_gen,
-        steps_per_epoch=args.epoch_steps,
-        epochs=args.n_epochs,
-        validation_data=val_gen,
-        validation_steps=args.val_steps,
-        callbacks=[csv_logger],
-    )
+#     model.fit_generator(
+#         train_gen,
+#         steps_per_epoch=args.epoch_steps,
+#         epochs=args.n_epochs,
+#         validation_data=val_gen,
+#         validation_steps=args.val_steps,
+#         callbacks=[csv_logger],
+#     )
 
     model.save_weights(args.save_dir + str(args.n_epochs) + ".hdf5")
     print("sava weight done..")
@@ -115,7 +115,7 @@ def main(args):
     count = 0
     Dice = []
     IOU = []
-    for i,(image,mask) in enumerate(test_gen):
+    for i,(image,mask,path) in enumerate(test_gen):
       pred_mask = model.predict(image)
       image = rgb2gray(image).squeeze()
       mask = mask.argmax(axis=2).reshape(args.input_shape[0],args.input_shape[1])
@@ -131,7 +131,8 @@ def main(args):
 
       sep_line = np.ones((args.input_shape[0], 10)) * 255
       all_images = [image * 255, sep_line, mask * 255, sep_line, pred_mask * 255]
-      cv2.imwrite(f"{save_path}/{val_list[i]}.png", np.concatenate(all_images, axis=1))
+      print(i,val_list[i])
+      cv2.imwrite(f"{save_path}/{path.split('/')[-1][:-4]}.png", np.concatenate(all_images, axis=1))
 
       count += 1
       if count == len(val_list):
