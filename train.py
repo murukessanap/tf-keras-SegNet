@@ -92,7 +92,7 @@ def main(args):
     )
     print(model.summary())
 
-    optimizer = keras.optimizers.Adam(learning_rate=args.lr)
+    optimizer = keras.optimizers.Adam(learning_rate=float(args.lr))
     model.compile(loss=args.loss, optimizer=optimizer, metrics=[DiceScore,IoUScore])
     csv_logger = CSVLogger('training.log')
     model.fit_generator(
