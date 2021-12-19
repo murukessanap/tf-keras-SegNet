@@ -44,9 +44,11 @@ def data_gen_test(img_dir, mask_dir, lists, batch_size, dims, n_labels):
         ix = np.arange(len(lists))[count*batch_size:(count+1)*batch_size]
         imgs = []
         labels = []
+        img_paths = []
         for i in ix:
             # images
             img_path = img_dir + str(lists.iloc[i, 0]) + ".jpg"
+            img_paths.append(img_path)
             #print(img_path)
             original_img = cv2.imread(img_path)[:, :, ::-1]
             resized_img = cv2.resize(original_img, (dims[0],dims[1]))
@@ -61,4 +63,4 @@ def data_gen_test(img_dir, mask_dir, lists, batch_size, dims, n_labels):
         imgs = np.array(imgs)
         labels = np.array(labels)
         count += 1
-        yield imgs, labels        
+        yield imgs, labels, img_paths        
