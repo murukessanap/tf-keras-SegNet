@@ -94,7 +94,7 @@ def main(args):
     print(model.summary())
 
     optimizer = keras.optimizers.Adam(lr=float(args.lr))
-    model.compile(loss=args.loss, optimizer=optimizer, metrics=[MeanIoU(num_classes=2)])
+    model.compile(loss=args.loss, optimizer=optimizer, metrics=["accuracy"])
     csv_logger = CSVLogger('training.log')
     model.fit_generator(
         train_gen,
