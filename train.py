@@ -131,8 +131,7 @@ def main(args):
 
       sep_line = np.ones((args.input_shape[0], 10)) * 255
       all_images = [image * 255, sep_line, mask * 255, sep_line, pred_mask * 255]
-      print(i,val_list[i])
-      cv2.imwrite(f"{save_path}/{path.split('/')[-1][:-4]}.png", np.concatenate(all_images, axis=1))
+      cv2.imwrite(f"{save_path}/{path[0].split('/')[-1][:-4]}.png", np.concatenate(all_images, axis=1))
 
       count += 1
       if count == len(val_list):
