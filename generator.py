@@ -67,8 +67,8 @@ def data_gen_test(img_dir, mask_dir, lists, batch_size, dims, n_labels):
             #original_img = cv2.imread(img_path)[:, :, ::-1]
             #resized_img = cv2.resize(original_img, (dims[0],dims[1]))
             
-            original_img = Image.open(os.path.join(path, "images", id_[0])).convert("RGB")
-            resized_img = original_img.resize((IMG_HEIGHT, IMG_WIDTH))
+            original_img = Image.open(img_path).convert("RGB")
+            resized_img = original_img.resize((dims[0],dims[1]))
             resized_img = np.asarray(resized_img) / 255.0
             
             #array_img = img_to_array(resized_img) / 255
