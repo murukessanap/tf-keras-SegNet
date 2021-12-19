@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from PIL import Image
 
 from keras.preprocessing.image import img_to_array
 
@@ -22,18 +23,30 @@ def data_gen_small(img_dir, mask_dir, lists, batch_size, dims, n_labels):
             # images
             img_path = img_dir + str(lists.iloc[i, 0]) + ".jpg"
             #print(img_path)
-            original_img = cv2.imread(img_path)[:, :, ::-1]
-            resized_img = cv2.resize(original_img, (dims[0],dims[1]))
-            array_img = img_to_array(resized_img) / 255
-            imgs.append(array_img)
+            
+            #original_img = cv2.imread(img_path)[:, :, ::-1]
+            #resized_img = cv2.resize(original_img, (dims[0],dims[1]))
+            
+            original_img = Image.open(img_path).convert("RGB")
+            resized_img = original_img.resize((dims[0],dims[1]))
+            resized_img = np.asarray(resized_img) / 255.0
+            
+            #array_img = img_to_array(resized_img) / 255
+            imgs.append(resized_img)
             # masks
             mask_path = mask_dir + str(lists.iloc[i, 0]) + "_Al.ome.tiff"
             #print(mask_path)
             #original_mask = cv2.imread(mask_dir + str(lists.iloc[i, 0]) + ".ome.tiff")
-            original_mask = cv2.imread(mask_path,0)
-            resized_mask = cv2.resize(original_mask, (dims[0], dims[1]))
-            array_mask = category_label(resized_mask, dims, n_labels)
-            labels.append(array_mask)
+            
+            #original_mask = cv2.imread(mask_path,0)
+            #resized_mask = cv2.resize(original_mask, (dims[0], dims[1]))
+            
+            original_mask = Image.open(mask_path).convert("L") 
+            resized_mask = original_mask.resize((dims[0], dims[1]))
+            resized_mask = np.asarray(resized_mask)
+            
+            #array_mask = category_label(resized_mask, dims, n_labels)
+            labels.append(resized_mask)
         imgs = np.array(imgs)
         labels = np.array(labels)
         yield imgs, labels
@@ -50,16 +63,28 @@ def data_gen_test(img_dir, mask_dir, lists, batch_size, dims, n_labels):
             img_path = img_dir + str(lists.iloc[i, 0]) + ".jpg"
             img_paths.append(img_path)
             #print(img_path)
-            original_img = cv2.imread(img_path)[:, :, ::-1]
-            resized_img = cv2.resize(original_img, (dims[0],dims[1]))
-            array_img = img_to_array(resized_img) / 255
-            imgs.append(array_img)
+            
+            #original_img = cv2.imread(img_path)[:, :, ::-1]
+            #resized_img = cv2.resize(original_img, (dims[0],dims[1]))
+            
+            original_img = Image.open(os.path.join(path, "images", id_[0])).convert("RGB")
+            resized_img = original_img.resize((IMG_HEIGHT, IMG_WIDTH))
+            resized_img = np.asarray(resized_img) / 255.0
+            
+            #array_img = img_to_array(resized_img) / 255
+            imgs.append(resized_img)
             # masks
             mask_path = mask_dir + str(lists.iloc[i, 0]) + "_Al.ome.tiff"
-            original_mask = cv2.imread(mask_path,0)
-            resized_mask = cv2.resize(original_mask, (dims[0], dims[1]))
-            array_mask = category_label(resized_mask, dims, n_labels)
-            labels.append(array_mask)
+            
+            #original_mask = cv2.imread(mask_path,0)
+            #resized_mask = cv2.resize(original_mask, (dims[0], dims[1]))
+            
+            original_mask = Image.open(mask_path).convert("L") 
+            resized_mask = original_mask.resize((dims[0], dims[1]))
+            resized_mask = np.asarray(resized_mask)
+            
+            #array_mask = category_label(resized_mask, dims, n_labels)
+            labels.append(resized_mask)
         imgs = np.array(imgs)
         labels = np.array(labels)
         count += 1
