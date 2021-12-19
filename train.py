@@ -141,7 +141,8 @@ def main(args):
 def rgb2gray(rgb):
     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
 
-def DiceScore(targets, inputs, smooth=1e-6):
+smooth=1e-6
+def DiceScore(targets, inputs):
     
     #flatten label and prediction tensors
     inputs = tf.cast(K.flatten(inputs), tf.float32)
@@ -151,7 +152,7 @@ def DiceScore(targets, inputs, smooth=1e-6):
     dice = (2*intersection + smooth) / (K.sum(targets) + K.sum(inputs) + smooth)
     return K.get_value(dice)
 
-def IoUScore(targets, inputs, smooth=1e-6):
+def IoUScore(targets, inputs):
     
     #flatten label and prediction tensors
     inputs = tf.cast(K.flatten(inputs), tf.float32)
