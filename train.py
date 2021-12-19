@@ -96,14 +96,14 @@ def main(args):
     optimizer = keras.optimizers.Adam(lr=float(args.lr))
     model.compile(loss=args.loss, optimizer=optimizer, metrics=["accuracy"])
     csv_logger = CSVLogger('training.log')
-#     model.fit_generator(
-#         train_gen,
-#         steps_per_epoch=args.epoch_steps,
-#         epochs=args.n_epochs,
-#         validation_data=val_gen,
-#         validation_steps=args.val_steps,
-#         callbacks=[csv_logger],
-#     )
+    model.fit_generator(
+        train_gen,
+        steps_per_epoch=args.epoch_steps,
+        epochs=args.n_epochs,
+        validation_data=val_gen,
+        validation_steps=args.val_steps,
+        callbacks=[csv_logger],
+    )
 
     model.save_weights(args.save_dir + str(args.n_epochs) + ".hdf5")
     print("sava weight done..")
