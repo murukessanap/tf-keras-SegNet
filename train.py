@@ -8,7 +8,7 @@ import numpy as np
 import tensorflow as tf
 from keras.callbacks import CSVLogger
 import keras.backend as K
-from keras.metrics import Recall, Precision, MeanIoU
+from tensorflow.keras.metrics import Recall, Precision, MeanIoU
 import keras
 
 
