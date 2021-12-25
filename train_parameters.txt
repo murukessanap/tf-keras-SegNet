@@ -9,7 +9,7 @@
 --n_epochs=10
 --epoch_steps=5
 --val_steps=2
---n_labels=2
+--n_labels=1
 --lr=0.001
 --output_mode=sigmoid
 --loss=binary_crossentropy
