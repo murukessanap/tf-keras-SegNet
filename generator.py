@@ -30,7 +30,7 @@ def data_gen_small(img_dir, mask_dir, lists, batch_size, dims, n_labels):
             original_img = Image.open(img_path).convert("RGB")
             resized_img = original_img.resize((dims[0],dims[1]))
             resized_img = np.asarray(resized_img) / 255.0
-            resized_img = np.expand_dims(resized_img,-1)
+            #resized_img = np.expand_dims(resized_img,-1)
             
             #array_img = img_to_array(resized_img) / 255
             imgs.append(resized_img) 
@@ -73,7 +73,7 @@ def data_gen_test(img_dir, mask_dir, lists, batch_size, dims, n_labels):
             original_img = Image.open(img_path).convert("RGB")
             resized_img = original_img.resize((dims[0],dims[1]))
             resized_img = np.asarray(resized_img) / 255.0
-            resized_img = np.expand_dims(resized_img,-1)
+            #resized_img = np.expand_dims(resized_img,-1)
             
             #array_img = img_to_array(resized_img) / 255
             imgs.append(resized_img)
