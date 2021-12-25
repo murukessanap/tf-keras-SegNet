@@ -30,6 +30,7 @@ def data_gen_small(img_dir, mask_dir, lists, batch_size, dims, n_labels):
             original_img = Image.open(img_path).convert("RGB")
             resized_img = original_img.resize((dims[0],dims[1]))
             resized_img = np.asarray(resized_img) / 255.0
+            resized_img = np.expand_dims(resized_img,-1)
             
             #array_img = img_to_array(resized_img) / 255
             imgs.append(resized_img) 
@@ -44,6 +45,7 @@ def data_gen_small(img_dir, mask_dir, lists, batch_size, dims, n_labels):
             original_mask = Image.open(mask_path).convert("L") 
             resized_mask = original_mask.resize((dims[0], dims[1]))
             resized_mask = np.asarray(resized_mask)
+            resized_mask = np.expand_dims(resized_mask,-1)
             
             #array_mask = category_label(resized_mask, (dims[0], dims[1]), n_labels)
             array_mask = resized_mask
@@ -71,6 +73,7 @@ def data_gen_test(img_dir, mask_dir, lists, batch_size, dims, n_labels):
             original_img = Image.open(img_path).convert("RGB")
             resized_img = original_img.resize((dims[0],dims[1]))
             resized_img = np.asarray(resized_img) / 255.0
+            resized_img = np.expand_dims(resized_img,-1)
             
             #array_img = img_to_array(resized_img) / 255
             imgs.append(resized_img)
@@ -83,6 +86,7 @@ def data_gen_test(img_dir, mask_dir, lists, batch_size, dims, n_labels):
             original_mask = Image.open(mask_path).convert("L") 
             resized_mask = original_mask.resize((dims[0], dims[1]))
             resized_mask = np.asarray(resized_mask)
+            resized_mask = np.expand_dims(resized_mask,-1)
             
             #array_mask = category_label(resized_mask, (dims[0], dims[1]), n_labels)
             array_mask = resized_mask
