@@ -122,8 +122,8 @@ def main(args):
       pred_mask = model.predict(image)
       image = rgb2gray(image).squeeze()
       mask = mask.reshape(args.input_shape[0],args.input_shape[1])
-      pred_mask[pred_mask>=0.5] = 1
-      pred_mask[pred_mask<0.5] = 0
+      #pred_mask[pred_mask>=0.5] = 1
+      #pred_mask[pred_mask<0.5] = 0
       pred_mask = pred_mask.reshape(args.input_shape[0],args.input_shape[1])
       Dice.append(DiceScore(mask,pred_mask))
       IOU.append(IoUScore(mask,pred_mask))
