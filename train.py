@@ -6,7 +6,7 @@ from model import segnet
 import cv2
 import numpy as np
 import tensorflow as tf
-from keras.callbacks import CSVLogger
+from keras.callbacks import CSVLogger,ModelCheckpoint
 import keras.backend as K
 from tensorflow.keras.metrics import Recall, Precision, MeanIoU
 import keras
@@ -45,7 +45,9 @@ def argparser():
     parser.add_argument(
         "--loss", default="categorical_crossentropy", type=str, help="loss function"
     )
-    parser.add_argument("--optimizer", default="adadelta", type=str, help="oprimizer")
+    parser.add_argument("--optimizer", default="adadelta", type=str, help="optimizer")
+    parser.add_argument("--model_path", default="/content/segnet_model.h5", type=str, help="save best model")
+    
     args = parser.parse_args()
 
     return args
@@ -96,20 +98,21 @@ def main(args):
     optimizer = keras.optimizers.Adam(lr=float(args.lr))
     model.compile(loss=args.loss, optimizer=optimizer, metrics=["accuracy"])
     csv_logger = CSVLogger('training.log')
+    checkpoint = ModelCheckpoint(args.model_path, verbose=1, save_best_only=True, monitor='val_accuracy', mode='max')
     model.fit_generator(
         train_gen,
         steps_per_epoch=args.epoch_steps,
         epochs=args.n_epochs,
         validation_data=val_gen,
         validation_steps=args.val_steps,
-        callbacks=[csv_logger],
+        callbacks=[csv_logger, checkpoint],
     )
 
-    model.save_weights(args.save_dir + str(args.n_epochs) + ".hdf5")
+    #model.save_weights(args.save_dir + str(args.n_epochs) + ".hdf5")
     print("sava weight done..")
     #print(args.save_dir + str(args.n_epochs) + ".hdf5")
     #file_path = args.save_dir + str(args.n_epochs) + ".hdf5"
-    #model.load_weights(file_path)
+    model.load_weights(args.model_path)
 
     save_path = "results/"
     count = 0
