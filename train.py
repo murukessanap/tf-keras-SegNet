@@ -118,8 +118,8 @@ def main(args):
     for i,(image,mask,path) in enumerate(test_gen):
       pred_mask = model.predict(image)
       image = rgb2gray(image).squeeze()
-      mask = mask.argmax(axis=2).reshape(args.input_shape[0],args.input_shape[1])
-      pred_mask = pred_mask.argmax(axis=2).reshape(args.input_shape[0],args.input_shape[1])
+      mask = mask.reshape(args.input_shape[0],args.input_shape[1])
+      pred_mask = pred_mask.reshape(args.input_shape[0],args.input_shape[1])
       Dice.append(DiceScore(mask,pred_mask))
       IOU.append(IoUScore(mask,pred_mask))
       print(image.shape)
