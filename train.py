@@ -98,7 +98,7 @@ def main(args):
     optimizer = keras.optimizers.Adam(lr=float(args.lr))
     model.compile(loss=args.loss, optimizer=optimizer, metrics=["accuracy"])
     csv_logger = CSVLogger('training.log')
-    checkpoint = ModelCheckpoint(args.model_path, verbose=1, save_best_only=True, monitor='val_accuracy', mode='max')
+    checkpoint = ModelCheckpoint(args.model_path, verbose=1, save_best_only=True, monitor='val_acc', mode='max')
     model.fit_generator(
         train_gen,
         steps_per_epoch=args.epoch_steps,
