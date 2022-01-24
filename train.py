@@ -118,6 +118,11 @@ def main(args):
     count = 0
     Dice = []
     IOU = []
+    Precision = []
+    Recall = []
+    F1 = []
+    Specificity = []
+    Accuracy = []
     for i,(image,mask,path) in enumerate(test_gen):
       pred_mask = model.predict(image)
       image = rgb2gray(image).squeeze()
@@ -128,6 +133,13 @@ def main(args):
       pred_mask = pred_mask.reshape(args.input_shape[0],args.input_shape[1])
       Dice.append(DiceScore(mask,pred_mask))
       IOU.append(IoUScore(mask,pred_mask))
+      TP, FP, TN, FN = perf_measure(mask,pred_mask)
+      Pr, Re, F1_, Sp, Acc = class_metrics(TP, FP, TN, FN)
+      Precision.append(Pr)
+      Recall.append(Re)
+      F1.append(F1_)
+      Specificity.append(Sp)
+      Accuracy.append(Acc)
       print(image.shape)
       print(mask.shape)
       print(pred_mask.shape)
@@ -144,6 +156,11 @@ def main(args):
         break
     print("Average Test DICE score: ",sum(Dice)/len(Dice))
     print("Average Test IOU score: ",sum(IOU)/len(IOU))
+    print("Average Test Precision score: ",sum(Precision)/len(Precision))
+    print("Average Test Recall score: ",sum(Recall)/len(Recall))
+    print("Average Test F1 score: ",sum(F1)/len(F1))
+    print("Average Test Specificity score: ",sum(Specificity)/len(Specificity))
+    print("Average Test Accuracy score: ",sum(Accuracy)/len(Accuracy))
 
 def rgb2gray(rgb):
     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
@@ -177,6 +194,47 @@ def IoUScore(targets, inputs):
     
     IoU = (intersection + smooth) / (union + smooth)
     return K.get_value(IoU)
+
+def perf_measure(targets, inputs):
+    #flatten label and prediction tensors
+    y_hat = tf.cast(K.flatten(inputs), tf.bool)
+    y_actual = tf.cast(K.flatten(targets), tf.bool)
+    y_hat_not = tf.math.logical_not(y_hat)
+    y_actual_not = tf.math.logical_not(y_actual)
+    y_hat = tf.cast(y_hat, tf.float32)
+    y_actual = tf.cast(y_actual, tf.float32)
+    y_hat_not = tf.cast(y_hat_not, tf.float32)
+    y_actual_not = tf.cast(y_actual_not, tf.float32)
+    # TP = 0
+    # FP = 0
+    # TN = 0
+    # FN = 0
+
+    # for i in range(len(y_hat)): 
+    #     if y_actual[i]==y_hat[i]==1:
+    #        TP += 1
+    #     if y_hat[i]==1 and y_actual[i]!=y_hat[i]:
+    #        FP += 1
+    #     if y_actual[i]==y_hat[i]==0:
+    #        TN += 1
+    #     if y_hat[i]==0 and y_actual[i]!=y_hat[i]:
+    #        FN += 1
+
+    TP = tf.keras.backend.get_value(K.sum(K.dot(tf.expand_dims(y_actual,0), tf.expand_dims(y_hat,-1))))
+    FP = tf.keras.backend.get_value(K.sum(K.dot(tf.expand_dims(y_actual_not,0), tf.expand_dims(y_hat,-1))))
+    TN = tf.keras.backend.get_value(K.sum(K.dot(tf.expand_dims(y_actual_not,0), tf.expand_dims(y_hat_not,-1))))
+    FN = tf.keras.backend.get_value(K.sum(K.dot(tf.expand_dims(y_actual,0), tf.expand_dims(y_hat_not,-1))))  
+
+    return(TP, FP, TN, FN)
+
+def class_metrics(TP, FP, TN, FN):
+  Precision = TP/(TP+FP)
+  Recall = TP/(TP+FN)
+  F1 = 2*Precision*Recall/(Precision+Recall)
+  Specificity = TN/(TN+FP)
+  Accuracy = (TP+TN)/(TP+TN+FP+FN)
+  return(Precision, Recall, F1, Specificity, Accuracy)
+
 
 if __name__ == "__main__":
     args = argparser()
