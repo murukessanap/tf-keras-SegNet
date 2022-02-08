@@ -11,6 +11,65 @@ import keras.backend as K
 from tensorflow.keras.metrics import Recall, Precision, MeanIoU
 import keras
 
+def DiceLoss(targets, inputs, smooth=1e-6):
+    
+    #flatten label and prediction tensors
+    inputs = K.flatten(inputs)
+    targets = K.flatten(targets)
+    # print(inputs.shape)
+    # print(targets.shape)
+    
+    intersection = K.sum(targets*inputs)
+    dice = (2.*intersection + smooth) / (K.sum(targets) + K.sum(inputs) + smooth)
+    return 1 - dice
+
+
+def IoULoss(targets, inputs, smooth=1e-6):
+    
+    #flatten label and prediction tensors
+    inputs = K.flatten(inputs)
+    targets = K.flatten(targets)
+    
+    intersection = K.sum(targets*inputs)
+    total = K.sum(targets) + K.sum(inputs)
+    union = total - intersection
+    
+    IoU = (1.*intersection + smooth) / (union + smooth)
+    return 1 - IoU
+
+
+ALPHA = 0.5
+BETA = 0.5
+def TverskyLoss(targets, inputs, alpha=ALPHA, beta=BETA, smooth=1e-6):
+        
+    #flatten label and prediction tensors
+    inputs = K.flatten(inputs)
+    targets = K.flatten(targets)
+    
+    #True Positives, False Positives & False Negatives
+    TP = K.sum((inputs * targets))
+    FP = K.sum(((1-targets) * inputs))
+    FN = K.sum((targets * (1-inputs)))
+    
+    Tversky = (TP + smooth) / (TP + alpha*FP + beta*FN + smooth)  
+    
+    return 1 - Tversky
+
+GAMMA = 0.5
+def SSLoss(targets, inputs, gamma=GAMMA, smooth=1e-6):
+
+    #flatten label and prediction tensors
+    inputs = K.flatten(inputs)
+    targets = K.flatten(targets)
+
+    sq = K.square(targets-inputs)
+    inputs_o = 1 - inputs
+    LSS = gamma*(K.sum(sq*inputs)+smooth)/(K.sum(inputs)+smooth) + (1-gamma)*(K.sum(sq*inputs_o)+smooth)/(K.sum(inputs_o)+smooth)
+    
+    return LSS
+
+loss_fn_dict = {"DiceLoss":DiceLoss,"IoULoss":IoULoss,"TverskyLoss":TverskyLoss,"SSLoss":SSLoss,"binary_crossentropy":"binary_crossentropy"}
+
 
 def argparser():
     # command line argments
@@ -96,7 +155,8 @@ def main(args):
     print(model.summary())
 
     optimizer = keras.optimizers.Adam(lr=float(args.lr))
-    model.compile(loss=args.loss, optimizer=optimizer, metrics=["accuracy"])
+    loss_fn = loss_fn_dict[args.loss]
+    model.compile(loss=loss_fn, optimizer=optimizer, metrics=["accuracy"])
     csv_logger = CSVLogger('training.log')
     #checkpoint = ModelCheckpoint(args.model_path, verbose=1, save_best_only=True, monitor='val_acc', mode='max')
     model.fit_generator(
